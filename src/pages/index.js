@@ -1,29 +1,53 @@
-import * as React from "react"
+import * as React from "react";
+import { graphql, Link } from "gatsby";
 
 import SignIn from '../components/signin';
 import SignedIn from '../components/signedin';
 import authentication from '../service/firebase';
-console.log(authentication);
 
-function App() {
-  const [user, setUser] = React.useState(null);
+var userIsWriter = false;
+
+function App({ data }) {
+  var currentUser = authentication.currentUser;
+  const [user, setUser] = React.useState(currentUser);
+
+  var writerEmails = data.allWritersJson.edges.map(edge => edge.node.email);
 
   React.useEffect(() => {
     authentication.onAuthStateChanged(user => {
       setUser(user);
+      for (var i = 0; i < writerEmails.length; i++) {
+        if (user != null && user.email === writerEmails[i]) {
+          userIsWriter = true;
+          break;
+        } else if (user == null) {
+          userIsWriter = false;
+        }
+      }
     })
-  }, [])
+  });
 
-  console.log(user);
+  const isWriter = userIsWriter;
 
   return (
     <div className="user-corner">
-      {user ? <SignedIn user={user} /> : <SignIn />}
+      {isWriter ? <div><SignedIn user={user} /> <Link to="/create-article"><button>Buat Artikel</button></Link></div> : <SignIn />}
     </div>
   );
 }
 
 export default App;
+
+export const query = graphql `
+query WritersQuery {
+  allWritersJson {
+    edges {
+      node {
+        email
+      }
+    }
+  }
+}`;
 
 // styles
 /*const pageStyles = {
