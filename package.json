@@ -15,6 +15,7 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "firebase": "^9.8.4",
     "gatsby": "^4.17.2",
     "gatsby-source-filesystem": "^4.17.0",
     "gatsby-transformer-json": "^4.17.0",
