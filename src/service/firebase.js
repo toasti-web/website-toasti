@@ -14,6 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const authentication = new auth.getAuth();
+export default authentication;
 const provider = new auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account' });
 

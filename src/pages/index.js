@@ -1,7 +1,32 @@
 import * as React from "react"
 
+import SignIn from '../components/signin';
+import SignedIn from '../components/signedin';
+import authentication from '../service/firebase';
+console.log(authentication);
+
+function App() {
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    authentication.onAuthStateChanged(user => {
+      setUser(user);
+    })
+  }, [])
+
+  console.log(user);
+
+  return (
+    <div className="user-corner">
+      {user ? <SignedIn user={user} /> : <SignIn />}
+    </div>
+  );
+}
+
+export default App;
+
 // styles
-const pageStyles = {
+/*const pageStyles = {
   color: "#232129",
   padding: 96,
   fontFamily: "-apple-system, Roboto, sans-serif, serif",
@@ -181,4 +206,4 @@ const IndexPage = () => {
   )
 }
 
-export default IndexPage
+export default IndexPage*/
