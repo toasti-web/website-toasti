@@ -1,34 +1,56 @@
 import * as React from "react";
-import { graphql, Link } from "gatsby";
+import { Link } from "gatsby";
+import { firestore } from "../service/firebase";
 
 import SignIn from '../components/signin';
 import SignedIn from '../components/signedin';
 import authentication from '../service/firebase';
 
 var userIsWriter = false;
+var writerEmails = [];
 
-function App({ data }) {
+const GetWriters = () => {
+  const [writerList, setWriterList] = React.useState([]);
+
+  React.useEffect(() => {
+    const unsubscribe = firestore.onSnapshot(firestore.collection(firestore.getFirestore(), 'writers'), snapshot => {
+      const writersList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setWriterList(writersList.map(writer => (writer.email)));
+    });
+    return () => unsubscribe();
+  })
+
+  return writerList;
+}
+
+function App() {
+
   var currentUser = authentication.currentUser;
   const [user, setUser] = React.useState(currentUser);
 
-  var writerEmails = data.allWritersJson.edges.map(edge => edge.node.email);
+  writerEmails = GetWriters();
 
   React.useEffect(() => {
     authentication.onAuthStateChanged(user => {
       setUser(user);
-      for (var i = 0; i < writerEmails.length; i++) {
-        if (user != null && user.email === writerEmails[i]) {
-          userIsWriter = true;
-          break;
-        } else if (user == null) {
-          userIsWriter = false;
+
+      if (writerEmails != null) {
+        for (var i = 0; i < writerEmails.length; i++) {
+          if (user != null && user.email === writerEmails[i]) {
+            userIsWriter = true;
+            break;
+          } else if (user == null) {
+            userIsWriter = false;
+          }
         }
       }
-    })
+    });
   });
 
   const isWriter = userIsWriter;
-
   return (
     <div className="user-corner">
       {isWriter ? <div><SignedIn user={user} /> <Link to="/create-article"><button>Buat Artikel</button></Link></div> : <SignIn />}
@@ -37,17 +59,6 @@ function App({ data }) {
 }
 
 export default App;
-
-export const query = graphql `
-query WritersQuery {
-  allWritersJson {
-    edges {
-      node {
-        email
-      }
-    }
-  }
-}`;
 
 // styles
 /*const pageStyles = {
