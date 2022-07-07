@@ -19,9 +19,9 @@ const PrivateRoute = ({ component: Component, location, data, ...rest }) => {
     }
   }
 
-  if (!userIsWriter && location.pathname !== `/`) {
+  if (!userIsWriter) {
     if (typeof window !== `undefined`) {
-      navigate(`/`);
+      navigate(-1);
     }
     return null
   }
