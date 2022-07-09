@@ -1,9 +1,11 @@
 import React from 'react';
+import  Button from "react-bootstrap/Button";
+
 import { signInWithGoogle } from '../service/firebase';
 
 const SignIn = () => (
     <div>
-      <button className="button" onClick={signInWithGoogle}><i className="fab fa-google"></i>Sign in with google</button>
+      <Button onClick={signInWithGoogle}>Sign in with google</Button>
     </div>
   );
 export default SignIn; 
