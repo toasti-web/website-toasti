@@ -9,11 +9,18 @@ import authentication from '../service/firebase';
 var userIsWriter = false;
 var writerEmails = [];
 
+const getWriterSnapshot = async () => {
+  const writersQuery = firestore.query(firestore.collection(firestore.getFirestore(), 'writers'));
+  const writerSnapshot = await firestore.getDocs(writersQuery);
+  console.log(writerSnapshot);
+  writerEmails = writerSnapshot.docs.map(doc => doc.data().email);
+}
+
 const GetWriters = () => {
   const [writerList, setWriterList] = React.useState([]);
 
   React.useEffect(() => {
-    const unsubscribe = firestore.onSnapshot(firestore.collection(firestore.getFirestore(), 'writers'), snapshot => {
+    /*const unsubscribe = firestore.onSnapshot(firestore.collection(firestore.getFirestore(), 'writers'), snapshot => {
       const writersList = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -23,6 +30,28 @@ const GetWriters = () => {
     return () => unsubscribe();
   })
 
+  return writerList;*/
+
+  if (writerEmails.length === 0) {
+    getWriterSnapshot().then(() => {
+      console.log(writerEmails);
+      setWriterList(writerEmails);
+    });
+  }
+
+  //if (writerSnapshot) {
+    //const writersList = writerSnapshot.docs.map(doc => ({
+      //id: doc.id,
+      //...doc.data()
+    //}));
+    //console.log(writerSnapshot);
+    //setWriterList(writersList.map(writer => (writer.email)));
+  //} else {
+    //console.log("test");
+  //}
+
+});
+  
   return writerList;
 }
 
