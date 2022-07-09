@@ -5,7 +5,9 @@ var userIsWriter = false;
 
 const PrivateRoute = ({ component: Component, location, data, ...rest }) => {
 
-  userIsWriter = JSON.parse(window.localStorage.getItem('userIsWriter'));
+  if (typeof window !== `undefined`) {
+    userIsWriter = JSON.parse(window.localStorage.getItem('userIsWriter'));
+  }
 
   if (!userIsWriter) {
     if (typeof window !== `undefined`) {
