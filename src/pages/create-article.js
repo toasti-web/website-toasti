@@ -1,5 +1,4 @@
 import * as React from "react";
-import { graphql } from "gatsby";
 import { Router } from "@reach/router";
 
 import ArticleForm from "../components/articleForm"
@@ -13,14 +12,3 @@ const App = ({ data }) => {
     )
 }
 export default App;
-
-export const query = graphql `
-query ArticleWritersQuery {
-  allWritersJson {
-    edges {
-      node {
-        email
-      }
-    }
-  }
-}`;
