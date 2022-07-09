@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import Navbar  from "./navbar";
+import NavBar  from "./navbar";
 
 const NavbarWrapper = ({ children }) => (
     <div >

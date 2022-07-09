@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as reactBootstrap from "react-bootstrap";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@popperjs/core/dist/umd/popper.min.js";
